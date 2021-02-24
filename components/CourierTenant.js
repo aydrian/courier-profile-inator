@@ -7,16 +7,19 @@ function TenantForm({ setTenant }) {
 
   const onAuthTokenChange = (e) => setAuthToken(e.target.value);
 
-  const handleAuthTokenSubmit = async (e) => {
+  const handleVerifySubmit = async (e) => {
     const { data } = await axios.post(`/api/courier/verify`, { authToken });
-    setTenant({ authToken, ...data });
+    const { data: lists } = await axios.post(`/api/courier/listLists`, {
+      authToken
+    });
+    setTenant({ authToken, lists, ...data });
   };
 
   return (
     <FormControl>
       <FormLabel>Courier Auth Token</FormLabel>
       <Input type="password" onChange={onAuthTokenChange} value={authToken} />
-      <Button type="button" onClick={handleAuthTokenSubmit} colorScheme="blue">
+      <Button type="button" onClick={handleVerifySubmit} colorScheme="blue">
         Submit
       </Button>
     </FormControl>

@@ -16,7 +16,10 @@ import {
   Tab,
   TabList,
   TabPanels,
-  TabPanel
+  TabPanel,
+  Checkbox,
+  CheckboxGroup,
+  Stack
 } from "@chakra-ui/react";
 
 import Editor from "react-simple-code-editor";
@@ -38,6 +41,8 @@ export default function Home() {
   const [recipientId, setRecipientId] = useState("");
   const [recipients, setRecipients] = useState([]);
   const [tabIndex, setTabIndex] = useState(0);
+  const [checkRecipients, setCheckedRecipients] = useState([]);
+  const [list, setList] = useState("");
 
   const handleTabsChange = async (index) => {
     if (index === 0) {
@@ -112,6 +117,27 @@ export default function Home() {
       duration: 9000,
       isClosable: true
     });
+  };
+
+  const onRecipientsChanged = (value) => setCheckedRecipients(value);
+
+  const onListChanged = (e) => setList(e.target.value);
+
+  const handleSubscribe = async (e) => {
+    if (list && checkRecipients) {
+      await axios.post(`/api/courier/subscribe`, {
+        authToken: tenant.authToken,
+        list,
+        recipientIds: checkRecipients
+      });
+      toast({
+        title: "List updated.",
+        description: "We've subscribed the recipients to the list.",
+        status: "success",
+        duration: 9000,
+        isClosable: true
+      });
+    }
   };
 
   return (
@@ -211,11 +237,36 @@ export default function Home() {
                 {tenant && recipients.length > 0 && (
                   <div>
                     <h2>Recipients</h2>
-                    <ul>
-                      {recipients.map((recipient) => {
-                        return <li>{recipient.recipientId}</li>;
+                    <CheckboxGroup onChange={onRecipientsChanged}>
+                      <Stack>
+                        {recipients.map((recipient) => {
+                          return (
+                            <Checkbox
+                              value={recipient.recipientId}
+                              key={recipient.recipientId}
+                            >
+                              {recipient.recipientId}
+                            </Checkbox>
+                          );
+                        })}
+                      </Stack>
+                    </CheckboxGroup>
+                    <Select placeholder="Select List" onChange={onListChanged}>
+                      {tenant.lists.map((list) => {
+                        return (
+                          <option key={list.id} value={list.id}>
+                            {list.name || list.id}
+                          </option>
+                        );
                       })}
-                    </ul>
+                    </Select>
+                    <Button
+                      type="button"
+                      onClick={handleSubscribe}
+                      colorScheme="blue"
+                    >
+                      Add to List
+                    </Button>
                   </div>
                 )}
               </>
