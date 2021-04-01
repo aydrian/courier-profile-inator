@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     user_id: response.user_id,
     handle: response.screen_name
   };
-  console.log(result);
+
   res.redirect(
     `/twitter?oauth_token=${result.oauth_token}&oauth_token_secret=${result.oauth_token_secret}&user_id=${result.user_id}&handle=${result.handle}`
   );

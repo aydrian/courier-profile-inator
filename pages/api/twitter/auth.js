@@ -6,7 +6,7 @@ const client = new Twitter({
 
 export default async function handler(req, res) {
   const { oauth_token, oauth_token_secret } = await client.getRequestToken(
-    "http://localhost:8888/api/twitter/callback"
+    "https://courier-profile-inator.netlify.app/api/twitter/callback"
   );
 
   res.redirect(
