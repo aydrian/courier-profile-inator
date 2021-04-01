@@ -1,8 +1,10 @@
+import Head from "next/head";
 import { useState } from "react";
 import axios from "axios";
 import {
   Box,
   Button,
+  Container,
   FormControl,
   FormLabel,
   Heading,
@@ -46,45 +48,58 @@ export default function Twitter() {
   };
 
   return (
-    <div>
-      {oauth_token ? (
-        <>
-          <Heading as="h1">Save your Twitter Profile</Heading>
-          <Box rounded="8px" my="8" bg="#011627">
-            <Editor
-              value={JSON.stringify(profile, null, 2)}
-              highlight={(code) =>
-                highlight(code, Prism.languages.json, "json")
-              }
-              padding={10}
-              style={{
-                fontFamily: '"Fira code", "Fira Mono", monospace',
-                fontSize: 12
-              }}
-            />
-          </Box>
-          <FormControl>
-            <FormLabel>Courier Auth Token</FormLabel>
-            <Input onChange={onAuthTokenChange} value={authToken} />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Recipient Id</FormLabel>
-            <Input onChange={onRecipientIdChange} value={recipientId} />
-          </FormControl>
-          <Button type="button" onClick={handleProfileSave} colorScheme="blue">
-            Save Profile
-          </Button>
-        </>
-      ) : (
-        <Button
-          as="a"
-          href="/api/twitter/auth"
-          colorScheme="twitter"
-          leftIcon={<FaTwitter />}
-        >
-          Sign in to Twitter
-        </Button>
-      )}
-    </div>
+    <Container>
+      <Head>
+        <title>Courier Profile-inator: Twitter</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <main>
+        {oauth_token ? (
+          <>
+            <Heading as="h1">Save your Twitter Profile</Heading>
+            <Box rounded="8px" my="8" bg="#011627">
+              <Editor
+                value={JSON.stringify(profile, null, 2)}
+                highlight={(code) =>
+                  highlight(code, Prism.languages.json, "json")
+                }
+                padding={10}
+                style={{
+                  fontFamily: '"Fira code", "Fira Mono", monospace',
+                  fontSize: 12
+                }}
+              />
+            </Box>
+            <FormControl>
+              <FormLabel>Courier Auth Token</FormLabel>
+              <Input onChange={onAuthTokenChange} value={authToken} />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Recipient Id</FormLabel>
+              <Input onChange={onRecipientIdChange} value={recipientId} />
+            </FormControl>
+            <Button
+              type="button"
+              onClick={handleProfileSave}
+              colorScheme="blue"
+            >
+              Save Profile
+            </Button>
+          </>
+        ) : (
+          <>
+            <Heading as="h1">Sign into your Twitter Account</Heading>
+            <Button
+              as="a"
+              href="/api/twitter/auth"
+              colorScheme="twitter"
+              leftIcon={<FaTwitter />}
+            >
+              Sign in to Twitter
+            </Button>
+          </>
+        )}
+      </main>
+    </Container>
   );
 }
