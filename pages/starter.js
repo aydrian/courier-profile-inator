@@ -33,12 +33,8 @@ export default function Twitter() {
     ...(phoneNumber.length > 0 && { phone_number: phoneNumber })
   };
 
-  const onRecipientIdChange = (e) => setRecipientId(e.target.value);
-  const onAuthTokenChange = (e) => setAuthToken(e.target.value);
-  const onEmailChange = (e) => setEmail(e.target.value);
-  const onPhoneNumberChange = (e) => setPhoneNumber(e.target.value);
-
   const handleProfileSave = async (e) => {
+    e.preventDefault();
     try {
       const { data } = await axios.post(`/api/courier/saveProfile`, {
         authToken,
@@ -76,66 +72,77 @@ export default function Twitter() {
         <Heading as="h1" marginBottom="4">
           Create your Profile
         </Heading>
-        <FormControl isRequired>
-          <FormLabel>Courier Auth Token</FormLabel>
-          <Input
-            type="password"
-            onChange={onAuthTokenChange}
-            value={authToken}
-          />
-          <FormHelperText>
-            You can find this in the Courier App under{" "}
-            <Link
-              as="a"
-              href="https://app.courier.com/settings/api-keys"
-              isExternal
-            >
-              Settings &gt; API Keys
-            </Link>
-          </FormHelperText>
-        </FormControl>
-        <FormControl isRequired>
-          <FormLabel>Recipient Id</FormLabel>
-          <Input onChange={onRecipientIdChange} value={recipientId} />
-        </FormControl>
-        <FormControl>
-          <FormLabel>Email</FormLabel>
-          <InputGroup>
-            <InputLeftElement
-              pointerEvents="none"
-              children={<EmailIcon color="gray.300" />}
-            />
-            <Input type="email" onChange={onEmailChange} value={email} />
-          </InputGroup>
-        </FormControl>
-        <FormControl>
-          <FormLabel>Phone Number</FormLabel>
-          <InputGroup>
-            <InputLeftElement
-              pointerEvents="none"
-              children={<PhoneIcon color="gray.300" />}
-            />
+        <form onSubmit={handleProfileSave}>
+          <FormControl isRequired>
+            <FormLabel>Courier Auth Token</FormLabel>
             <Input
-              type="tel"
-              onChange={onPhoneNumberChange}
-              value={phoneNumber}
+              type="password"
+              onChange={(event) => setAuthToken(event.currentTarget.value)}
+              value={authToken}
             />
-          </InputGroup>
-        </FormControl>
-        <Box rounded="8px" my="8" bg="#011627">
-          <Editor
-            value={JSON.stringify(profile, null, 2)}
-            highlight={(code) => highlight(code, Prism.languages.json, "json")}
-            padding={10}
-            style={{
-              fontFamily: '"Fira code", "Fira Mono", monospace',
-              fontSize: 12
-            }}
-          />
-        </Box>
-        <Button type="button" onClick={handleProfileSave} colorScheme="blue">
-          Save Profile
-        </Button>
+            <FormHelperText>
+              You can find this in the Courier App under{" "}
+              <Link
+                as="a"
+                href="https://app.courier.com/settings/api-keys"
+                isExternal
+              >
+                Settings &gt; API Keys
+              </Link>
+            </FormHelperText>
+          </FormControl>
+          <FormControl isRequired>
+            <FormLabel>Recipient Id</FormLabel>
+            <Input
+              onChange={(event) => setRecipientId(event.currentTarget.value)}
+              value={recipientId}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Email</FormLabel>
+            <InputGroup>
+              <InputLeftElement
+                pointerEvents="none"
+                children={<EmailIcon color="gray.300" />}
+              />
+              <Input
+                type="email"
+                onChange={(event) => setEmail(event.currentTarget.value)}
+                value={email}
+              />
+            </InputGroup>
+          </FormControl>
+          <FormControl>
+            <FormLabel>Phone Number</FormLabel>
+            <InputGroup>
+              <InputLeftElement
+                pointerEvents="none"
+                children={<PhoneIcon color="gray.300" />}
+              />
+              <Input
+                type="tel"
+                onChange={(event) => setPhoneNumber(event.currentTarget.value)}
+                value={phoneNumber}
+              />
+            </InputGroup>
+          </FormControl>
+          <Box rounded="8px" my="8" bg="#011627">
+            <Editor
+              value={JSON.stringify(profile, null, 2)}
+              highlight={(code) =>
+                highlight(code, Prism.languages.json, "json")
+              }
+              padding={10}
+              style={{
+                fontFamily: '"Fira code", "Fira Mono", monospace',
+                fontSize: 12
+              }}
+            />
+          </Box>
+          <Button type="submit" colorScheme="blue">
+            Save Profile
+          </Button>
+        </form>
       </main>
     </Container>
   );
